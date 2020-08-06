@@ -22,14 +22,14 @@ endif
 
 " Variables -----------------------------------------------{{{1
 
-let s:open_patt = '\C\%(\<\%(function\|if\|repeat\|do\)\>\|(\|{\)'
-let s:middle_patt = '\C\<\%(else\|elseif\)\>'
-let s:close_patt = '\C\%(\<\%(end\|until\)\>\|)\|}\)'
+let s:open_patt = '\C\%(\<\%(function\|then\|repeat\|do\)\>\|(\|{\)'
+let s:middle_patt = '\C\<\%(else\)\>'
+let s:close_patt = '\C\%(\<\%(elseif\|end\|until\)\>\|)\|}\)'
 
-let s:anon_func_start = '\S\+\s*[({].*\<function\s*(.*)\s*$'
-let s:anon_func_end = '\<end\%(\s*[)}]\)\+'
-
-let s:chained_func_call = "^\\v\\s*[:.]\\w+[({\"']"
+let s:anon_func_start = ''
+"'\S\+\s*[({].*\<function\s*(.*)\s*$'
+let s:anon_func_end = ''
+"'\<end\%(\s*[)}]\)\+'
 
 " Expression used to check whether we should skip a match with searchpair().
 let s:skip_expr = "synIDattr(synID(line('.'),col('.'),1),'name') =~# 'luaComment\\|luaString'"
@@ -100,29 +100,19 @@ function GetLuaIndent()
     let i += 1
   endif
 
-  " if the current line chains a function call to previous unchained line
-  if contents_prev !~# s:chained_func_call && contents_cur =~# s:chained_func_call
-    let i += 1
-  endif
-
-  " if the current line chains a function call to previous unchained line
-  if contents_prev =~# s:chained_func_call && contents_cur !~# s:chained_func_call
-    let i -= 1
-  endif
-
   " special case: call(with, {anon = function() -- should indent only once
-  if i > 1 && contents_prev =~# s:anon_func_start
-    let i = 1
-  endif
+  "if i > 1 && contents_prev =~# s:anon_func_start
+    "let i -= 1
+  "endif
 
   " special case: end}) -- end of call w/ anon func should outdent only once
-  if i < -1 && contents_cur =~# s:anon_func_end
-    let i = -1
-  endif
+  "if i < -1 && contents_cur =~# s:anon_func_end
+    "let i += 1
+  "endif
 
   " restore cursor
   call setpos(".", original_cursor_pos)
 
-  return indent(prev_line) + (shiftwidth() * i)
+  return indent(prev_line) + (&sw * i)
 
 endfunction

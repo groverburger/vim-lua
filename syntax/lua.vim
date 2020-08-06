@@ -11,11 +11,6 @@ if !exists("main_syntax")
   let main_syntax = 'lua'
 endif
 
-if exists('g:lua_syntax_fancynotequal') && !has('conceal')
-  unlet g:lua_syntax_fancynotequal
-endif
-
-
 syntax sync fromstart
 
 function! s:FoldableRegion(tag, name, expr)
@@ -43,11 +38,7 @@ syntax region luaBracket transparent matchgroup=luaBrackets start="\[" end="\]" 
 syntax match  luaComma ","
 syntax match  luaSemiCol ";"
 if !exists('g:lua_syntax_nosymboloperator')
-  if exists('g:lua_syntax_fancynotequal')
-    syntax match luaNotEqOperator "\V~=" conceal cchar=≠
-    setlocal conceallevel=2
-  endi
-  syntax match luaSymbolOperator "[#<>=~^&|*/%+-]\|\.\." contains=luaNotEqOperator
+  syntax match luaSymbolOperator "[#<>=~^&|*/%+-]\|\.\."
 endi
 syntax match  luaEllipsis "\.\.\."
 
@@ -169,36 +160,37 @@ if !exists('g:lua_syntax_nostdlib')
           \ table
           \ utf8
 
-    syntax keyword luaSpecialValue
-          \ _VERSION
-          \ collectgarbage
-          \ dofile
-          \ getfenv
-          \ getmetatable
-          \ ipairs
-          \ load
-          \ loadfile
-          \ loadstring
-          \ next
-          \ pairs
-          \ print
-          \ rawequal
-          \ rawget
-          \ rawlen
-          \ rawset
-          \ select
-          \ setfenv
-          \ setmetatable
-          \ tonumber
-          \ tostring
-          \ type
-          \ unpack
+    "syntax keyword luaSpecialValue
+          "\ _VERSION
+          "\ collectgarbage
+          "\ dofile
+          "\ getfenv
+          "\ getmetatable
+          "\ ipairs
+          "\ load
+          "\ loadfile
+          "\ loadstring
+          "\ next
+          "\ rawequal
+          "\ rawget
+          "\ rawlen
+          "\ rawset
+          "\ select
+          "\ setfenv
+          "\ setmetatable
+          "\ tonumber
+          "\ tostring
+          "\ type
+          "\ unpack
+          "\ pairs
+          "\ print
   endif
 endif
 
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
 " For version 5.8 and later: only when an item doesn't have highlighting yet
+" luaFuncCall and luaSpecialValue were PreProc highlighted
 if version >= 508 || !exists("did_lua_syn_inits")
   if version < 508
     let did_lua_syn_inits = 1
@@ -222,7 +214,7 @@ if version >= 508 || !exists("did_lua_syn_inits")
   HiLink luaError            Error
   HiLink luaFloat            Float
   HiLink luaFuncArgName      Noise
-  HiLink luaFuncCall         PreProc
+  HiLink luaFuncCall         Function
   HiLink luaFuncId           Function
   HiLink luaFuncName         luaFuncId
   HiLink luaFuncTable        luaFuncId
@@ -236,7 +228,6 @@ if version >= 508 || !exists("did_lua_syn_inits")
   HiLink luaLocal            Type
   HiLink luaNumber           Number
   HiLink luaSymbolOperator   luaOperator
-  HiLink luaNotEqOperator    luaOperator
   HiLink luaOperator         Operator
   HiLink luaRepeat           Repeat
   HiLink luaSemiCol          Delimiter
@@ -247,10 +238,6 @@ if version >= 508 || !exists("did_lua_syn_inits")
   HiLink luaStringLong       luaString
   HiLink luaStringSpecial    SpecialChar
   HiLink luaErrHand          Exception
-
-  if exists('g:lua_syntax_fancynotequal')
-    hi! link Conceal luaOperator
-  endi
 
   delcommand HiLink
 end
