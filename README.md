@@ -4,8 +4,8 @@ vim-lua
 Improved Lua 5.3 syntax and indentation support for Vim.
 
 Highlighting: stock Vim (left) vs. this plugin (right):
-![](http://tbastos.github.io/i/vim-lua-syntax.jpg)
-_(Color scheme: solarized dark; Font: Anonymous Pro)_
+![](example.png)
+_(Color scheme: solarized dark; Font: Menlo Nerd Font Mono)_
 
 Configuration
 -------------
